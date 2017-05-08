@@ -5,6 +5,7 @@ Images are surrounded by a dashed border. The color depends on the type:
 - green for simple lossy (nothing from extended)
 - pink for simple lossless (nothing from extended)
 - red for extended (can contain transparency, animations, color profile ...)
+
 When hovering an image, the quality/url will appear except on sites with complex
 CSS. In that case, just look up the messages in the console by pressing F12.
 
