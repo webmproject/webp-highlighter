@@ -166,12 +166,15 @@ function TestUrl(url, port) {
     if (url.includes("image/webp")) {
       // Base64 like on Amazon.
       console.log("WebP in base 64.");
-      // TODO analyze the blob properly.
+      var i = url.search("base64") + 6;
+      while (url[i] == "," || url[i] == " ") ++i;
+      var blob = Uint8Array.from(atob(url.substring(i)), c => c.charCodeAt(0));
+      var quality = VP8EstimateQuality(blob);
       port.postMessage({
         "request": "webp_test_url",
         "url": url,
-        "quality": 0,
-        "type": "VP8 "
+        "quality": quality["quality"],
+        "type": quality["type"]
       });
     }
   } else {
