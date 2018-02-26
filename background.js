@@ -105,7 +105,13 @@ function TestRemoteBlob(url, port, tab_url) {
     fetch_url = "https:" + url;
   }
   if (!fetch_url.startsWith("http")) {
-    fetch_url = tab_url + "/" + fetch_url;
+    if (fetch_url.startsWith("/")) {
+      // If an absolute path, it is relative to the domain.
+      fetch_url = (new URL(tab_url)).origin + "/" + fetch_url;
+    } else {
+      // Otherwise, it is relative to the current URL.
+      fetch_url = tab_url + "/" + fetch_url;
+    }
   }
   var fetch_headers = new Headers();
   fetch_headers.append("Accept", "image/webp,image/*,*/*;q=0.8");
@@ -162,6 +168,8 @@ function TestRemoteBlob(url, port, tab_url) {
  */
 function TestUrl(url, port) {
   if (url == undefined) return;
+  url = url.trim();
+  if (url == "") return;
   if (url.includes("base64")) {
     if (url.includes("image/webp")) {
       // Base64 like on Amazon.
