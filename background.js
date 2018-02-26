@@ -105,7 +105,13 @@ function TestRemoteBlob(url, port, tab_url) {
     fetch_url = "https:" + url;
   }
   if (!fetch_url.startsWith("http")) {
-    fetch_url = tab_url + "/" + fetch_url;
+    if (fetch_url.startsWith("/")) {
+      // If an absolute path, it is relative to the domain.
+      fetch_url = (new URL(tab_url)).origin + "/" + fetch_url;
+    } else {
+      // Otherwise, it is relative to the current URL.
+      fetch_url = tab_url + "/" + fetch_url;
+    }
   }
   var fetch_headers = new Headers();
   fetch_headers.append("Accept", "image/webp,image/*,*/*;q=0.8");
@@ -162,16 +168,21 @@ function TestRemoteBlob(url, port, tab_url) {
  */
 function TestUrl(url, port) {
   if (url == undefined) return;
+  url = url.trim();
+  if (url == "") return;
   if (url.includes("base64")) {
     if (url.includes("image/webp")) {
       // Base64 like on Amazon.
       console.log("WebP in base 64.");
-      // TODO analyze the blob properly.
+      var i = url.search("base64") + 6;
+      while (url[i] == "," || url[i] == " ") ++i;
+      var blob = Uint8Array.from(atob(url.substring(i)), c => c.charCodeAt(0));
+      var quality = VP8EstimateQuality(blob);
       port.postMessage({
         "request": "webp_test_url",
         "url": url,
-        "quality": 0,
-        "type": "VP8 "
+        "quality": quality["quality"],
+        "type": quality["type"]
       });
     }
   } else {

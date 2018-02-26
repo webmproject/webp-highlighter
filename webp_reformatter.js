@@ -207,10 +207,14 @@ var TestForWebp = function() {
               if (has_space) {
                 src = srcset.substring(start, end);
               } else {
-                // If no space was found before, we need to have a space after
-                // the comma introducing the next string.
-                if (!/\s/g.test(srcset[i + 1])) continue;
-                src = srcset.substring(start, i);
+                if (i == srcset.length - 1) {
+                  src = srcset.substring(start);
+                } else {
+                  // If no space was found before, we need to have a space after
+                  // the comma introducing the next string.
+                  if (!/\s/g.test(srcset[i + 1])) continue;
+                  src = srcset.substring(start, i);
+                }
               }
               TestUrl(src, img);
               // Get to the next non-white space.

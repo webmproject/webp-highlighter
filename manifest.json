@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "WebP Highlighter",
-  "version": "1.19",
+  "version": "1.20",
   "description": "Makes WebP's recognizable on a webpage.",
   "icons": {"48": "icons/webplogo.png"},
   "permissions": ["webRequest", "webRequestBlocking", "storage", "tabs",
